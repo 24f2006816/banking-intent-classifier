@@ -16,7 +16,7 @@ Official Banking77 test set (3,080 queries, 77 intents), measured by the [traini
 | DistilBERT fine-tuned | 78.6% | 86.0% | 90.8% | 16.3 |
 | DistilBERT fine-tuned, int8 quantized | | | 90.2% | 4.7 |
 
-Accuracy shown; macro-F1 is within 0.003 of accuracy in every row (`results/metrics.json` in the release).
+Accuracy shown; macro-F1 is within 0.004 of accuracy in every row (`results/metrics.json` in the release).
 
 What the numbers say:
 
