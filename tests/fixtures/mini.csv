@@ -1,0 +1,49 @@
+text,category
+"It's been two weeks and I haven't gotten my card, what do I do?",card_arrival
+I haven't received my card and am worried it is lost.,card_arrival
+How much longer is it going to take to get my new card?,card_arrival
+Can I track the card you sent to me?,card_arrival
+I need to track the card sent to me.,card_arrival
+Should I keep waiting for my card to be delivered?,card_arrival
+Does the card you sent have a tracking number?,card_arrival
+"My card was supposed to arrive, but hasn't?",card_arrival
+Is there a reason my new card hasn't arrived yet?,card_arrival
+Why hasn't my card arrived yet?,card_arrival
+Is there a way to track my card?,card_arrival
+My card hasn't arrived.,card_arrival
+I need to know what your exchange rates are.,exchange_rate
+Can you explain your exchange rates basis?,exchange_rate
+"When exchanging, how much are the rates?",exchange_rate
+What are Interbanks current exchange rates?,exchange_rate
+How do I know what exchange rate I will get?,exchange_rate
+How do you decide what your exchange rates are?,exchange_rate
+Could you please tell me your exchange rates?,exchange_rate
+How is the exchange rate doing?,exchange_rate
+How are exchange rates calculated at this bank?,exchange_rate
+Where can I find your exchange rates?,exchange_rate
+What are your exchange rates calculated from?,exchange_rate
+Where are you getting your exchange rates from?,exchange_rate
+My card was stolen. What do I need to do?,lost_or_stolen_card
+I cant find my card.,lost_or_stolen_card
+I need to order a new card as my other one was stolen.,lost_or_stolen_card
+What are the steps I need to do if I have a stolen card?,lost_or_stolen_card
+What do I do if my card was stolen.,lost_or_stolen_card
+Are you able to guide me to my card's location?,lost_or_stolen_card
+What should I do if my card is stolen?,lost_or_stolen_card
+"Hi, I am on vacation in Spain and someone stole my bag with my phone and wallet with cards and everything. Can you block it ASAP and then I want to order a new one also ASAP.",lost_or_stolen_card
+I left my card at a restaurant and now its missing.,lost_or_stolen_card
+What is the first step that I should take after my card has been stolen?,lost_or_stolen_card
+What should I do?  My card has been stolen!,lost_or_stolen_card
+How do I deactivate a stolen card?,lost_or_stolen_card
+Fix my top up,top_up_failed
+"I desperately need to top-up my card, so why is it being declined? Can you solve this for me? I need to use my card immediately!",top_up_failed
+The top-up I ordered didn't process.,top_up_failed
+I believe my top up has failed,top_up_failed
+I topped up my card but the app rejected it.,top_up_failed
+I need help reapplying my top-up. It seems it isn't working.,top_up_failed
+I'm confused as to why my top-up did not go through.,top_up_failed
+I am having a huge problem with my card being declined and it's really important that I top-up today.  Would you please look into this further and let me know how I can get this fixed?,top_up_failed
+My credit card transaction was declined for a loan payment.  Can you tell me why?,top_up_failed
+Trouble with my top up,top_up_failed
+"I just topped up, and the app denied it.",top_up_failed
+My credit card seems to have been declined for top up. Why is it not going through? Can you tell me what's going on?,top_up_failed

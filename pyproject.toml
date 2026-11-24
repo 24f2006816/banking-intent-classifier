@@ -1,0 +1,32 @@
+[project]
+name = "banking-intent-classifier"
+version = "1.0.0"
+description = "Banking77 intent classification: TF-IDF vs frozen embeddings vs fine-tuned DistilBERT"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = ["scikit-learn>=1.4", "numpy", "fastapi>=0.110", "pydantic>=2"]
+
+[project.optional-dependencies]
+train = ["torch", "transformers>=4.45", "sentence-transformers>=3"]
+serve = ["torch", "transformers>=4.45", "uvicorn"]
+dev = ["pytest>=8", "ruff>=0.6", "httpx"]
+
+[tool.setuptools]
+packages = ["intents"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S"]
+ignore = ["S101"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["intents"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S"]

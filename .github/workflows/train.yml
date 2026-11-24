@@ -1,0 +1,42 @@
+name: Train and evaluate
+
+# Trains all models on a CPU runner, publishes the metrics table, and attaches the fine-tuned
+# DistilBERT to the `model-v1` release so the API and the demo can download it.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["intents/**", ".github/workflows/train.yml"]
+
+permissions:
+  contents: write
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install -e ".[train]"
+      - name: Train and evaluate
+        run: |
+          python -m intents.experiment --export-model models/distilbert
+          cat results/metrics.md >> "$GITHUB_STEP_SUMMARY"
+          echo "::notice title=metrics-json::$(python -c 'import json;print(json.dumps(json.load(open("results/metrics.json")),separators=(",",":")))')"
+      - name: Publish model to the model-v1 release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete model-v1 --yes --cleanup-tag || true
+          gh release create model-v1 models/distilbert.tar.gz results/metrics.json \
+            --title "Fine-tuned DistilBERT (Banking77)" \
+            --notes "Trained by the 'Train and evaluate' workflow, run ${{ github.run_id }}. Metrics in metrics.json."
+      - uses: actions/upload-artifact@v4
+        with:
+          name: results
+          path: results/
