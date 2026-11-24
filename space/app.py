@@ -9,6 +9,11 @@ import tarfile
 import urllib.request
 from pathlib import Path
 
+try:
+    import spaces  # ZeroGPU (free tier) needs at least one @spaces.GPU function; inference itself runs on CPU
+except ImportError:
+    spaces = None
+
 import gradio as gr
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
@@ -35,6 +40,9 @@ def classify(text: str):
     top = probs.topk(5)
     return {labels[i].replace("_", " "): float(v) for v, i in zip(top.values, top.indices, strict=True)}
 
+
+if spaces:
+    classify = spaces.GPU(duration=15)(classify)
 
 demo = gr.Interface(
     fn=classify,
