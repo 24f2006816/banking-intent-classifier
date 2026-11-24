@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Banking Intent Classifier</title>
+<style>
+  :root { --ink:#1b1f24; --muted:#5b6470; --line:#e3e6ea; --accent:#2457c5; --bg:#fafaf8; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color:var(--ink); background:var(--bg); }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 20px 48px; }
+  h1 { font-size: 28px; margin: 0 0 6px; }
+  p.lead { color: var(--muted); margin: 0 0 22px; }
+  a { color: var(--accent); }
+  form { display:flex; gap:10px; }
+  input[type=text] { flex:1; font:inherit; padding:12px 14px; border:1px solid var(--line); border-radius:10px; background:#fff; }
+  button.go { font:inherit; padding:12px 18px; border:0; border-radius:10px; background:var(--accent); color:#fff; cursor:pointer; }
+  button.go:disabled { opacity:.5; cursor:default; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 24px; }
+  .chips button { font:inherit; font-size:14px; border:1px solid var(--line); background:#fff; border-radius:999px; padding:6px 12px; cursor:pointer; }
+  .bars { display:flex; flex-direction:column; gap:10px; }
+  .bar { display:grid; grid-template-columns: 230px 1fr 56px; gap:10px; align-items:center; }
+  .track { background:#eef0f2; border-radius:6px; height:14px; overflow:hidden; }
+  .fill { background: var(--accent); height:100%; width:0; transition: width .3s; }
+  .bar.top { font-weight:600; }
+  .num { text-align:right; font-variant-numeric: tabular-nums; color: var(--muted); }
+  .status { font-size:14px; color:var(--muted); margin-top:14px; min-height:21px; }
+  footer { margin-top: 36px; font-size: 14px; color: var(--muted); border-top:1px solid var(--line); padding-top: 14px; }
+  @media (max-width: 560px) { .bar { grid-template-columns: 1fr 90px 50px; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Banking Intent Classifier</h1>
+  <p class="lead">Routes a customer message to one of 77 banking intents. DistilBERT fine-tuned on Banking77
+    (<span id="acc">see results</span>), quantized to int8 and running <strong>entirely in your browser</strong>
+    with Transformers.js, so your text never leaves your device.</p>
+  <form id="form"><input type="text" id="q" placeholder="Type a customer message…" autocomplete="off">
+    <button class="go" id="go" disabled>Classify</button></form>
+  <div class="chips" id="chips"></div>
+  <div class="bars" id="bars"></div>
+  <div class="status" id="status">Loading model (≈65 MB, cached after the first visit)…</div>
+  <footer><a href="https://github.com/24f2006816/banking-intent-classifier">Code, benchmark and training workflow</a> ·
+    Data: Banking77 (PolyAI, CC BY 4.0) · Built by Pratyaksh Pandey</footer>
+</main>
+<script type="module">
+import { pipeline, env } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.1.2";
+env.allowRemoteModels = false;
+env.allowLocalModels = true;
+env.localModelPath = new URL("./", location.href).href;
+
+const $ = (id) => document.getElementById(id);
+const EXAMPLES = ["My card still hasn't arrived after two weeks", "Why did my top-up fail?",
+  "What exchange rate do you use?", "Someone stole my card, block it now", "I was charged twice for the same coffee",
+  "How do I change my PIN?"];
+const pretty = (s) => s.replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase());
+let classifier;
+
+async function run(text) {
+  if (!text.trim() || !classifier) return;
+  $("q").value = text;
+  const t0 = performance.now();
+  const out = await classifier(text, { top_k: 5 });
+  $("bars").innerHTML = out.map((r, k) => `<div class="bar${k === 0 ? " top" : ""}"><span>${pretty(r.label)}</span>
+    <div class="track"><div class="fill" style="width:${(r.score * 100).toFixed(1)}%"></div></div>
+    <span class="num">${(r.score * 100).toFixed(1)}%</span></div>`).join("");
+  $("status").textContent = `Classified in ${(performance.now() - t0).toFixed(0)} ms on your device.`;
+}
+
+$("chips").innerHTML = EXAMPLES.map((e) => `<button type="button">${e}</button>`).join("");
+$("chips").querySelectorAll("button").forEach((b) => (b.onclick = () => run(b.textContent)));
+$("form").onsubmit = (e) => { e.preventDefault(); run($("q").value); };
+
+try {
+  classifier = await pipeline("text-classification", "model", { dtype: "q8" });
+  $("go").disabled = false;
+  $("status").textContent = "Model ready.";
+  run(EXAMPLES[0]);
+} catch (err) {
+  $("status").textContent = "Could not load the model: " + err;
+}
+</script>
+</body>
+</html>
